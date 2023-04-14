@@ -1,21 +1,18 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
-      required: [true, "Name is required"],
+      required: [true, "Username is required"],
+      unique: true,
     },
     password: {
       type: String,
       required: [true, "Password is required"],
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
     },
   },
   { versionKey: false }
@@ -27,8 +24,4 @@ userSchema.pre("save", async function () {
   }
 });
 
-const User = mongoose.model("users", userSchema);
-
-module.exports = {
-  User,
-};
+export const User = mongoose.model("users", userSchema);

@@ -1,7 +1,13 @@
-const jwt = require("jsonwebtoken");
-const { User } = require("../db/userModel");
+import { NextFunction, Response } from "express";
+import jwt from "jsonwebtoken";
+import { User } from "../db/userModel";
+import { AuthRequest } from "../types/request";
 
-const authMiddleware = async (req, res, next) => {
+export const authMiddleware = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).json({
@@ -16,7 +22,10 @@ const authMiddleware = async (req, res, next) => {
   }
 
   try {
-    const user = jwt.decode(token, process.env.JWT_SECRET);
+    const user = jwt.verify(token, process.env.JWT_SECRET || "") as {
+      _id: string;
+      iat: number;
+    };
 
     const userInDb = await User.findById(user._id);
     if (!userInDb) {
@@ -32,8 +41,4 @@ const authMiddleware = async (req, res, next) => {
       message: "Invalid token",
     });
   }
-};
-
-module.exports = {
-  authMiddleware,
 };

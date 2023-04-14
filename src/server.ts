@@ -1,6 +1,5 @@
-const app = require("./app");
-require("dotenv").config();
-const { connection } = require("./db/connection");
+import app from "./app";
+import { connection } from "./db/connection";
 
 const PORT = process.env.PORT || 8080;
 
@@ -11,7 +10,7 @@ connection
       console.log(`Server running. Use our API on port: ${PORT}`);
     });
   })
-  .catch((err) => {
+  .catch((err: Error) => {
     console.log(`Server not running. Error message: ${err.message}`);
     process.exit(1);
   });
