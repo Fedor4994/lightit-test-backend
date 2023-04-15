@@ -22,7 +22,7 @@ export const register = async (body: UserData) => {
   return { newUser, token };
 };
 
-export const login = async (body: Omit<UserData, "name">) => {
+export const login = async (body: UserData) => {
   const { username, password } = body;
   const newUser = await User.findOne({ username });
   if (!newUser) {

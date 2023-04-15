@@ -1,47 +1,51 @@
 import { Response, NextFunction } from "express";
 import { getCurrentUser, login, register } from "../services/authService";
-import { AuthRequest, TypedRequestBody } from "../types/request";
+import { AuthRequest, RequestWithBody } from "../types/request";
 import { UserData } from "../types/user";
+import { RequestError } from "../helpers/RequestError";
+import { AuthUserResponse } from "../types/response";
 
 export const registerController = async (
-  req: TypedRequestBody<UserData>,
-  res: Response,
+  req: RequestWithBody<UserData>,
+  res: Response<AuthUserResponse>,
   next: NextFunction
 ) => {
   try {
     const data = await register(req.body);
-    data
-      ? res.status(201).json({
-          user: {
-            username: data.newUser.username,
-            _id: data.newUser._id,
-          },
-          token: data.token,
-        })
-      : res.status(409).json({ message: "Username in use" });
+    if (!data) {
+      throw RequestError(409, "Username in use");
+    }
+
+    res.status(201).json({
+      user: {
+        username: data.newUser.username,
+        _id: data.newUser._id,
+      },
+      token: data.token,
+    });
   } catch (err) {
     next(err);
   }
 };
 
 export const loginController = async (
-  req: TypedRequestBody<Omit<UserData, "name">>,
-  res: Response,
+  req: RequestWithBody<UserData>,
+  res: Response<AuthUserResponse>,
   next: NextFunction
 ) => {
   try {
     const data = await login(req.body);
-    data
-      ? res.status(200).json({
-          user: {
-            username: data.newUser.username,
-            _id: data.newUser._id,
-          },
-          token: data.token,
-        })
-      : res.status(401).json({
-          message: "Email or password is wrong",
-        });
+    if (!data) {
+      throw RequestError(401, "Email or password is wrong");
+    }
+
+    res.status(200).json({
+      user: {
+        username: data.newUser.username,
+        _id: data.newUser._id,
+      },
+      token: data.token,
+    });
   } catch (err) {
     next(err);
   }
@@ -49,25 +53,26 @@ export const loginController = async (
 
 export const getCurrentUserController = async (
   req: AuthRequest,
-  res: Response,
+  res: Response<Omit<AuthUserResponse, "token">>,
   next: NextFunction
 ) => {
-  if (!req.user) {
-    return res.status(401).json({
-      message: "Not authorized",
+  try {
+    if (!req.user) {
+      throw RequestError(401, "Not authorized");
+    }
+
+    const user = await getCurrentUser(req.user);
+    if (!user) {
+      throw RequestError(401, "Not authorized");
+    }
+
+    res.status(200).json({
+      user: {
+        username: user.username,
+        _id: user._id,
+      },
     });
+  } catch (err) {
+    next(err);
   }
-
-  const user = await getCurrentUser(req.user);
-
-  user
-    ? res.status(200).json({
-        user: {
-          username: user.username,
-          _id: user._id,
-        },
-      })
-    : res.status(401).json({
-        message: "Not authorized",
-      });
 };

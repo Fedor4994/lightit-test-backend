@@ -3,6 +3,7 @@ import app from "../src/app";
 import http from "http";
 import mongoose from "mongoose";
 import { User } from "../src/db/userModel";
+import { UserData } from "../src/types/user";
 
 const { PORT, MONGO_URL } = process.env;
 
@@ -32,7 +33,7 @@ describe("test auth routes", () => {
   });
 
   it("shouldn't create new user with existing username", async () => {
-    const newUser = { username: "ExistingUser", password: "qweqwe" };
+    const newUser: UserData = { username: "ExistingUser", password: "qweqwe" };
     await User.create(newUser);
 
     await request(app)
@@ -42,7 +43,7 @@ describe("test auth routes", () => {
   });
 
   it("should create new user with correct input data", async () => {
-    const newUser = { username: "TestUser", password: "qweqwe" };
+    const newUser: UserData = { username: "TestUser", password: "qweqwe" };
 
     const response = await request(app)
       .post("/api/users/register")
@@ -56,10 +57,10 @@ describe("test auth routes", () => {
   });
 
   it("shouldn't login user with incorrect input data", async () => {
-    const newUser = { username: "Test", password: "qweqwe" };
+    const newUser: UserData = { username: "Test", password: "qweqwe" };
     await User.create(newUser);
 
-    const loginUser = { username: "Test", password: "123123" };
+    const loginUser: UserData = { username: "Test", password: "123123" };
     await request(app).post("/api/users/login").send(loginUser).expect(401, {
       message: "Email or password is wrong",
     });
@@ -72,10 +73,10 @@ describe("test auth routes", () => {
   });
 
   it("should login user with correct input data", async () => {
-    const newUser = { username: "Test", password: "qweqwe" };
+    const newUser: UserData = { username: "Test", password: "qweqwe" };
     await User.create(newUser);
 
-    const loginUser = { username: "Test", password: "qweqwe" };
+    const loginUser: UserData = { username: "Test", password: "qweqwe" };
 
     const response = await request(app)
       .post("/api/users/login")
@@ -94,14 +95,20 @@ describe("test auth routes", () => {
   it("shouldn't return user with incorrect token", async () => {
     await request(app)
       .get("/api/users/current")
-      .set("Authorization", "Bearer mytoken")
+      .set("Authorization", "Bearer incorrectToken")
       .expect(401, {
         message: "Invalid token",
       });
   });
 
+  it("Should ask to provide token in request without token", async () => {
+    await request(app).get("/api/users/current").expect(401, {
+      message: "Please, provide a token",
+    });
+  });
+
   it("should return user with correct token", async () => {
-    const newUser = { username: "Test", password: "qweqwe" };
+    const newUser: UserData = { username: "Test", password: "qweqwe" };
     const {
       body: { token },
     } = await request(app).post("/api/users/register").send(newUser);
