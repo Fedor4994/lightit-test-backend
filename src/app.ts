@@ -3,8 +3,8 @@ import logger from "morgan";
 import cors from "cors";
 import * as dotenv from "dotenv";
 
-import authRouter from "./routes/auth";
 import { ErrorWithStatus } from "./types/error";
+import { createAuthRouter } from "./routes/auth";
 
 dotenv.config();
 
@@ -16,7 +16,15 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/users", authRouter);
+function addApiRoutes() {
+  const router = express.Router();
+
+  router.use("/users", createAuthRouter());
+
+  return router;
+}
+
+app.use("/api", addApiRoutes());
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

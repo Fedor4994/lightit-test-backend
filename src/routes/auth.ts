@@ -7,10 +7,12 @@ import {
 import { authValidation } from "../middlewares/validationMiddleware";
 import { authMiddleware } from "../middlewares/authMiddleware";
 
-const router = express.Router();
+export function createAuthRouter() {
+  const router = express.Router();
 
-router.post("/register", authValidation, registerController);
-router.post("/login", authValidation, loginController);
-router.get("/current", authMiddleware, getCurrentUserController);
+  router.post("/register", authValidation, registerController);
+  router.post("/login", authValidation, loginController);
+  router.get("/current", authMiddleware, getCurrentUserController);
 
-export default router;
+  return router;
+}
