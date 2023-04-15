@@ -13,7 +13,7 @@ export const registerController = async (
     data
       ? res.status(201).json({
           user: {
-            name: data.newUser.username,
+            username: data.newUser.username,
             _id: data.newUser._id,
           },
           token: data.token,
