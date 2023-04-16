@@ -3,7 +3,7 @@ import {
   getCurrentUserController,
   loginController,
   registerController,
-} from "../controllers/authController";
+} from "../controllers/authControllers";
 import { authValidation } from "../middlewares/validationMiddleware";
 import { authMiddleware } from "../middlewares/authMiddleware";
 

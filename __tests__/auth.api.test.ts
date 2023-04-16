@@ -28,7 +28,6 @@ describe("test auth routes", () => {
   it("shouldn't create new user without data", async () => {
     await request(app)
       .post("/api/users/register")
-      .send()
       .expect(400, { message: 'ValidationError: "username" is required' });
   });
 

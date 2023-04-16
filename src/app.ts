@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 
 import { ErrorWithStatus } from "./types/error";
 import { createAuthRouter } from "./routes/auth";
+import { createProductsRouter } from "./routes/products";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ function addApiRoutes() {
   const router = express.Router();
 
   router.use("/users", createAuthRouter());
+  router.use("/products", createProductsRouter());
 
   return router;
 }
