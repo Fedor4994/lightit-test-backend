@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { RequestError } from "../helpers/RequestError";
-import { RequestWithParams } from "../types/request";
+import { RequestWithParams, RequestWithQuery } from "../types/request";
 import { ProductData } from "../types/product";
 import {
   getAllCategories,
@@ -9,14 +9,17 @@ import {
   getProductsByCategorieName,
 } from "../services/productsService";
 import mongoose from "mongoose";
+import { SortType } from "../types/sortType";
 
 export const getAllProductsController = async (
-  req: Request,
+  req: RequestWithQuery<{ page?: number; limit?: number; sort?: SortType }>,
   res: Response<ProductData[]>,
   next: NextFunction
 ) => {
   try {
-    const products = await getAllProducts();
+    const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
+
+    const products = await getAllProducts({ page, limit, sort });
     res.json(products);
   } catch (err) {
     next(err);

@@ -1,7 +1,21 @@
 import { Product } from "../db/productModel";
+import { getSortType } from "../helpers/getSortType";
+import { SortType } from "../types/sortType";
 
-export const getAllProducts = async () => {
-  const products = await Product.find({});
+type GetAllProductsQuery = { page: number; limit: number; sort: SortType };
+
+export const getAllProducts = async ({
+  page,
+  limit,
+  sort,
+}: GetAllProductsQuery) => {
+  const skipCount = (page - 1) * limit;
+
+  const products = await Product.find({})
+    .limit(limit)
+    .skip(skipCount)
+    .sort(getSortType(sort));
+
   return products;
 };
 
@@ -22,7 +36,7 @@ export const getProductsByCategorieName = async (categorieName: string) => {
 };
 
 export const getAllCategories = async () => {
-  const products = await getAllProducts();
+  const products = await Product.find({});
 
   const categories = products.map((product) => product.category);
   return categories;
