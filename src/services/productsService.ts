@@ -51,5 +51,8 @@ export const getAllCategories = async () => {
   const products = await Product.find({});
 
   const categories = products.map((product) => product.category);
-  return categories;
+
+  const uniqueCategories = [...new Set(categories)];
+
+  return uniqueCategories;
 };
