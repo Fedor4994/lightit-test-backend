@@ -11,12 +11,14 @@ export const getAllProducts = async ({
 }: GetAllProductsQuery) => {
   const skipCount = (page - 1) * limit;
 
+  const total = (await Product.find({})).length;
+
   const products = await Product.find({})
     .limit(limit)
     .skip(skipCount)
     .sort(getSortType(sort));
 
-  return products;
+  return { products, total };
 };
 
 export const getProductById = async (productId: string) => {
@@ -35,12 +37,14 @@ export const getProductsByCategorieName = async (
 ) => {
   const skipCount = (page - 1) * limit;
 
+  const total = (await Product.find({ category: categorieName })).length;
+
   const products = await Product.find({ category: categorieName })
     .limit(limit)
     .skip(skipCount)
     .sort(getSortType(sort));
 
-  return products;
+  return { products, total };
 };
 
 export const getAllCategories = async () => {

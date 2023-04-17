@@ -23,7 +23,7 @@ describe("test products routes", () => {
   });
 
   //products routes tests
-  it("should return array with 10 products without query params", async () => {
+  it("should return array with 10 products and total count without query params", async () => {
     const productMatcher = {
       title: expect.any(String),
       category: expect.any(String),
@@ -32,16 +32,20 @@ describe("test products routes", () => {
 
     const response = await request(app).get("/api/products");
 
-    const { statusCode, body } = response;
+    const {
+      statusCode,
+      body: { products, total },
+    } = response;
 
     expect(statusCode).toBe(200);
-    expect(body.length).toBe(10);
-    body.forEach((product: ProductData) => {
+    expect(products.length).toBe(10);
+    products.forEach((product: ProductData) => {
       expect(product).toMatchObject(productMatcher);
     });
+    expect(total).toEqual(expect.any(Number));
   });
 
-  it("should return array with 12 products with query limit=12", async () => {
+  it("should return array with 12 products and total count with query limit=12", async () => {
     const productMatcher = {
       title: expect.any(String),
       category: expect.any(String),
@@ -50,13 +54,17 @@ describe("test products routes", () => {
 
     const response = await request(app).get("/api/products?limit=12");
 
-    const { statusCode, body } = response;
+    const {
+      statusCode,
+      body: { products, total },
+    } = response;
 
     expect(statusCode).toBe(200);
-    expect(body.length).toBe(12);
-    body.forEach((product: ProductData) => {
+    expect(products.length).toBe(12);
+    products.forEach((product: ProductData) => {
       expect(product).toMatchObject(productMatcher);
     });
+    expect(total).toEqual(expect.any(Number));
   });
 
   it("shouldn't return product with incorrect id", async () => {
@@ -83,13 +91,17 @@ describe("test products routes", () => {
     expect(body).toMatchObject(productMatcher);
   });
 
-  it("should return empty array of products by incorrect category", async () => {
+  it("should return empty array of products and total count 0 by incorrect category", async () => {
     const response = await request(app).get("/api/products/categories/qweqwe");
 
-    const { statusCode, body } = response;
+    const {
+      statusCode,
+      body: { products, total },
+    } = response;
 
     expect(statusCode).toBe(200);
-    expect(body.length).toBe(0);
+    expect(products.length).toBe(0);
+    expect(total).toBe(0);
   });
 
   it("should return array of products with category by correct category", async () => {
@@ -99,12 +111,17 @@ describe("test products routes", () => {
       `/api/products/categories/${category}`
     );
 
-    const { statusCode, body } = response;
+    const {
+      statusCode,
+      body: { products, total },
+    } = response;
 
     expect(statusCode).toBe(200);
-    body.forEach((product: ProductData) => {
+
+    products.forEach((product: ProductData) => {
       expect(product).toMatchObject({ category });
     });
+    expect(total).toEqual(expect.any(Number));
   });
 
   it("should return array with categories", async () => {

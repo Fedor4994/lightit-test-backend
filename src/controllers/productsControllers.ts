@@ -17,14 +17,16 @@ import { SortType } from "../types/sortType";
 
 export const getAllProductsController = async (
   req: RequestWithQuery<{ page?: number; limit?: number; sort?: SortType }>,
-  res: Response<ProductData[]>,
+  res: Response<{ products: ProductData[]; total: number }>,
   next: NextFunction
 ) => {
   try {
     const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
 
-    const products = await getAllProducts({ page, limit, sort });
-    res.json(products);
+    const data = await getAllProducts({ page, limit, sort });
+    const { products, total } = data;
+
+    res.json({ products, total });
   } catch (err) {
     next(err);
   }
@@ -57,18 +59,21 @@ export const getProductsByCategorieNameController = async (
     { categorieName: string },
     { page?: number; limit?: number; sort?: SortType }
   >,
-  res: Response<ProductData[]>,
+  res: Response<{ products: ProductData[]; total: number }>,
   next: NextFunction
 ) => {
   try {
     const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
 
-    const products = await getProductsByCategorieName(
-      req.params.categorieName,
-      { page, limit, sort }
-    );
+    const data = await getProductsByCategorieName(req.params.categorieName, {
+      page,
+      limit,
+      sort,
+    });
 
-    res.json(products);
+    const { products, total } = data;
+
+    res.json({ products, total });
   } catch (err) {
     next(err);
   }
