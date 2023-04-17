@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { RequestError } from "../helpers/RequestError";
-import { RequestWithParams, RequestWithQuery } from "../types/request";
+import {
+  RequestWithParams,
+  RequestWithParamsAndQuery,
+  RequestWithQuery,
+} from "../types/request";
 import { ProductData } from "../types/product";
 import {
   getAllCategories,
@@ -49,12 +53,20 @@ export const getProductByIdController = async (
 };
 
 export const getProductsByCategorieNameController = async (
-  req: RequestWithParams<{ categorieName: string }>,
+  req: RequestWithParamsAndQuery<
+    { categorieName: string },
+    { page?: number; limit?: number; sort?: SortType }
+  >,
   res: Response<ProductData[]>,
   next: NextFunction
 ) => {
   try {
-    const products = await getProductsByCategorieName(req.params.categorieName);
+    const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
+
+    const products = await getProductsByCategorieName(
+      req.params.categorieName,
+      { page, limit, sort }
+    );
 
     res.json(products);
   } catch (err) {
