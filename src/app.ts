@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 import { ErrorWithStatus } from "./types/error";
 import { createAuthRouter } from "./routes/auth";
 import { createProductsRouter } from "./routes/products";
+import { createReviewsRouter } from "./routes/reviews";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ function addApiRoutes() {
 
   router.use("/users", createAuthRouter());
   router.use("/products", createProductsRouter());
+  router.use("/reviews", createReviewsRouter());
 
   return router;
 }
