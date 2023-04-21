@@ -81,7 +81,7 @@ describe("test products routes", () => {
     };
 
     const response = await request(app).get(
-      "/api/products/6436f461929d441e311b47b2"
+      "/api/products/6440e30d8421a6ca94151eaa"
     );
 
     const { statusCode, body } = response;
