@@ -15,6 +15,10 @@ const reviewSchema = new Schema(
       type: String,
       required: [true, "Username is required"],
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
     userId: {
       type: String,
       required: [true, "UserId is required"],

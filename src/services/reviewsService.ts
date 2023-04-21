@@ -1,8 +1,6 @@
 import { Product } from "../db/productModel";
 import { Review } from "../db/reviewModel";
-import { ProductData } from "../types/product";
 import { ReviewData } from "../types/reviews";
-import { getProductById } from "./productsService";
 
 const updateProductRaiting = async (productId: string) => {
   const reviews = await Review.find({ productId });
@@ -83,6 +81,7 @@ export const updateReview = async (
     {
       text,
       rating,
+      isEdited: true,
     },
     { new: true }
   );
