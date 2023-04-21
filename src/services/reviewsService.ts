@@ -23,7 +23,7 @@ const updateProductRaiting = async (productId: string) => {
 };
 
 export const getAllReviewsForProduct = async (productId: string) => {
-  const reviews = await Review.find({ productId });
+  const reviews = await Review.find({ productId }).sort({ createdAt: -1 });
 
   return reviews;
 };
@@ -96,7 +96,7 @@ export const updateReview = async (
 };
 
 export const getAllUserReviews = async (userId: string) => {
-  const reviews = await Review.find({ userId });
+  const reviews = await Review.find({ userId }).sort({ createdAt: -1 });
 
   const reviewsWithProducts = await Promise.all(
     reviews.map(async (review) => {
