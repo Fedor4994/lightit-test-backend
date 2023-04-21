@@ -1,8 +1,9 @@
-import { Response, NextFunction } from "express";
+import { Response, NextFunction, Request } from "express";
 import { AuthRequest, RequestWithParams } from "../types/request";
 import {
   addReview,
   getAllReviewsForProduct,
+  getAllUserReviews,
   removeReview,
   updateReview,
 } from "../services/reviewsService";
@@ -88,6 +89,21 @@ export const updateReviewForProductController = async (
     }
 
     res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getAllUserReviewsController = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?._id || "";
+
+    const reviews = await getAllUserReviews(userId);
+    res.json(reviews);
   } catch (err) {
     next(err);
   }

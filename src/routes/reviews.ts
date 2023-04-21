@@ -4,6 +4,7 @@ import {
   addReviewForProductController,
   deleteReviewForProductController,
   getAllReviewsForProductController,
+  getAllUserReviewsController,
   updateReviewForProductController,
 } from "../controllers/reviewsControllers";
 import {
@@ -17,6 +18,8 @@ export function createReviewsRouter() {
   router.get("/:productId", getAllReviewsForProductController);
 
   router.use(authMiddleware);
+
+  router.get("/", getAllUserReviewsController);
 
   router.post(
     "/:productId",

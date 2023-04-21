@@ -1,6 +1,8 @@
 import { Product } from "../db/productModel";
 import { Review } from "../db/reviewModel";
+import { ProductData } from "../types/product";
 import { ReviewData } from "../types/reviews";
+import { getProductById } from "./productsService";
 
 const updateProductRaiting = async (productId: string) => {
   const reviews = await Review.find({ productId });
@@ -92,4 +94,18 @@ export const updateReview = async (
   const newAverageRatingForProduct = await updateProductRaiting(productId);
 
   return { updatedReview, rating: newAverageRatingForProduct };
+};
+
+export const getAllUserReviews = async (userId: string) => {
+  const reviews = await Review.find({ userId });
+
+  const reviewsWithProducts = await Promise.all(
+    reviews.map(async (review) => {
+      const product = await Product.findById(review.productId);
+
+      return { review, product };
+    })
+  );
+
+  return reviewsWithProducts;
 };
