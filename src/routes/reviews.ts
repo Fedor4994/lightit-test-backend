@@ -7,10 +7,11 @@ import {
   getAllUserReviewsController,
   updateReviewForProductController,
 } from "../controllers/reviewsControllers";
+import { validationMiddleware } from "../middlewares/validationMiddleware";
 import {
-  addReviewForProductValidation,
-  updateReviewForProductValidation,
-} from "../middlewares/validationMiddleware";
+  addReviewForProductSchema,
+  updateReviewForProductSchema,
+} from "../schemas/reviewValidator";
 
 export function createReviewsRouter() {
   const router = express.Router();
@@ -23,13 +24,13 @@ export function createReviewsRouter() {
 
   router.post(
     "/:productId",
-    addReviewForProductValidation,
+    validationMiddleware(addReviewForProductSchema),
     addReviewForProductController
   );
   router.delete("/:productId", deleteReviewForProductController);
   router.put(
     "/:productId",
-    updateReviewForProductValidation,
+    validationMiddleware(updateReviewForProductSchema),
     updateReviewForProductController
   );
 

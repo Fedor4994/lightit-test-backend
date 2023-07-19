@@ -1,7 +1,7 @@
 import { User } from "../db/userModel";
+import { isValidPassword } from "../helpers/validPassword";
 import { UserData } from "../types/user";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 
 export const register = async (body: UserData) => {
   const { username, password } = body;
@@ -29,8 +29,7 @@ export const login = async (body: UserData) => {
     return false;
   }
 
-  const isCorrectPassword = await bcrypt.compare(password, newUser.password);
-
+  const isCorrectPassword = await isValidPassword(password, newUser.password);
   if (!isCorrectPassword) {
     return false;
   }
