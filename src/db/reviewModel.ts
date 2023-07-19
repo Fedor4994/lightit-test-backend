@@ -9,11 +9,11 @@ const reviewSchema = new Schema(
     },
     rating: {
       type: Number,
-      required: [true, "Rating is required"],
+      required: true,
     },
     username: {
       type: String,
-      required: [true, "Username is required"],
+      required: true,
     },
     isEdited: {
       type: Boolean,
@@ -21,11 +21,11 @@ const reviewSchema = new Schema(
     },
     userId: {
       type: String,
-      required: [true, "UserId is required"],
+      required: true,
     },
     productId: {
       type: String,
-      required: [true, "ProductId is required"],
+      required: true,
     },
   },
   { timestamps: true, versionKey: false }

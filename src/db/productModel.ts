@@ -6,35 +6,35 @@ const productSchema = new Schema(
   {
     title: {
       type: String,
-      required: [true, "Title is required"],
+      required: true,
     },
     description: {
       type: String,
-      required: [true, "Description is required"],
+      required: true,
     },
     price: {
       type: Number,
-      required: [true, "Price is required"],
+      required: true,
     },
     discountPercentage: {
       type: Number,
-      required: [true, "DiscountPercentage is required"],
+      required: true,
     },
     rating: {
       type: Number,
-      required: [true, "Rating is required"],
+      required: true,
     },
     stock: {
       type: Number,
-      required: [true, "Stock is required"],
+      required: true,
     },
     brand: {
       type: String,
-      required: [true, "Brand is required"],
+      required: true,
     },
     category: {
       type: String,
-      required: [true, "Category is required"],
+      required: true,
     },
     images: [{ type: String }],
   },

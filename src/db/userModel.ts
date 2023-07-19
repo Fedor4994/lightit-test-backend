@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import { hashPassword } from "../helpers/hash-password";
 
 const Schema = mongoose.Schema;
 
@@ -7,12 +7,12 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: [true, "Username is required"],
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: true,
     },
   },
   { versionKey: false }
@@ -20,7 +20,7 @@ const userSchema = new Schema(
 
 userSchema.pre("save", async function () {
   if (this.isNew) {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await hashPassword(this.password);
   }
 });
 
