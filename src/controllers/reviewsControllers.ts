@@ -14,14 +14,10 @@ export const getAllReviewsForProductController = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const { productId } = req.params;
-    const reviews = await getAllReviewsForProduct(productId);
+  const { productId } = req.params;
+  const reviews = await getAllReviewsForProduct(productId);
 
-    res.json(reviews);
-  } catch (err) {
-    next(err);
-  }
+  res.json(reviews);
 };
 
 export const addReviewForProductController = async (
@@ -29,27 +25,23 @@ export const addReviewForProductController = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const { productId } = req.params;
-    const { text, rating, username } = req.body;
-    const userId = req.user?._id || "";
+  const { productId } = req.params;
+  const { text, rating, username } = req.body;
+  const userId = req.user?._id || "";
 
-    const data = await addReview({
-      text,
-      rating,
-      username,
-      productId,
-      userId,
-    });
+  const data = await addReview({
+    text,
+    rating,
+    username,
+    productId,
+    userId,
+  });
 
-    if (!data) {
-      throw RequestError(400, "User already have review for this product");
-    }
-
-    res.status(201).json(data);
-  } catch (err) {
-    next(err);
+  if (!data) {
+    throw RequestError(400, "User already have review for this product");
   }
+
+  res.status(201).json(data);
 };
 
 export const deleteReviewForProductController = async (
@@ -57,19 +49,15 @@ export const deleteReviewForProductController = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const { productId } = req.params;
-    const userId = req.user?._id || "";
-    const data = await removeReview(productId, userId);
+  const { productId } = req.params;
+  const userId = req.user?._id || "";
+  const data = await removeReview(productId, userId);
 
-    if (!data) {
-      throw RequestError(404, "Not found review for this user");
-    }
-
-    res.status(200).json(data);
-  } catch (err) {
-    next(err);
+  if (!data) {
+    throw RequestError(404, "Not found review for this user");
   }
+
+  res.status(200).json(data);
 };
 
 export const updateReviewForProductController = async (
@@ -77,21 +65,17 @@ export const updateReviewForProductController = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const { productId } = req.params;
-    const { text, rating } = req.body;
-    const userId = req.user?._id || "";
+  const { productId } = req.params;
+  const { text, rating } = req.body;
+  const userId = req.user?._id || "";
 
-    const data = await updateReview(text, rating, productId, userId);
+  const data = await updateReview(text, rating, productId, userId);
 
-    if (!data) {
-      throw RequestError(404, "Not found review for this user");
-    }
-
-    res.status(200).json(data);
-  } catch (err) {
-    next(err);
+  if (!data) {
+    throw RequestError(404, "Not found review for this user");
   }
+
+  res.status(200).json(data);
 };
 
 export const getAllUserReviewsController = async (
@@ -99,12 +83,8 @@ export const getAllUserReviewsController = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const userId = req.user?._id || "";
+  const userId = req.user?._id || "";
 
-    const reviews = await getAllUserReviews(userId);
-    res.json(reviews);
-  } catch (err) {
-    next(err);
-  }
+  const reviews = await getAllUserReviews(userId);
+  res.json(reviews);
 };

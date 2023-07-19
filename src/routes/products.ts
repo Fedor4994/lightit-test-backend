@@ -6,17 +6,18 @@ import {
   getProductsByCategorieNameController,
   getProductByIdController,
 } from "../controllers/productsControllers";
+import { tryCatch } from "../middlewares/tryCatchMiddleware";
 
 export function createProductsRouter() {
   const router = express.Router();
 
-  router.get("/categories", getAllCategoriesController);
+  router.get("/categories", tryCatch(getAllCategoriesController));
   router.get(
     "/categories/:categorieName",
-    getProductsByCategorieNameController
+    tryCatch(getProductsByCategorieNameController)
   );
-  router.get("/", getAllProductsController);
-  router.get("/:id", getProductByIdController);
+  router.get("/", tryCatch(getAllProductsController));
+  router.get("/:id", tryCatch(getProductByIdController));
 
   return router;
 }

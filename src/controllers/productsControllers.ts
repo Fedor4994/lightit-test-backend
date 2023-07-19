@@ -20,16 +20,12 @@ export const getAllProductsController = async (
   res: Response<{ products: ProductData[]; total: number }>,
   next: NextFunction
 ) => {
-  try {
-    const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
+  const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
 
-    const data = await getAllProducts({ page, limit, sort });
-    const { products, total } = data;
+  const data = await getAllProducts({ page, limit, sort });
+  const { products, total } = data;
 
-    res.json({ products, total });
-  } catch (err) {
-    next(err);
-  }
+  res.json({ products, total });
 };
 
 export const getProductByIdController = async (
@@ -37,21 +33,17 @@ export const getProductByIdController = async (
   res: Response<ProductData>,
   next: NextFunction
 ) => {
-  try {
-    if (!mongoose.isValidObjectId(req.params.id)) {
-      throw RequestError(404, "Not found");
-    }
-
-    const product = await getProductById(req.params.id);
-
-    if (!product) {
-      throw RequestError(404, "Not found");
-    }
-
-    res.json(product);
-  } catch (err) {
-    next(err);
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    throw RequestError(404, "Not found");
   }
+
+  const product = await getProductById(req.params.id);
+
+  if (!product) {
+    throw RequestError(404, "Not found");
+  }
+
+  res.json(product);
 };
 
 export const getProductsByCategorieNameController = async (
@@ -62,21 +54,17 @@ export const getProductsByCategorieNameController = async (
   res: Response<{ products: ProductData[]; total: number }>,
   next: NextFunction
 ) => {
-  try {
-    const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
+  const { page = 1, limit = 10, sort = "rating-desc-rank" } = req.query;
 
-    const data = await getProductsByCategorieName(req.params.categorieName, {
-      page,
-      limit,
-      sort,
-    });
+  const data = await getProductsByCategorieName(req.params.categorieName, {
+    page,
+    limit,
+    sort,
+  });
 
-    const { products, total } = data;
+  const { products, total } = data;
 
-    res.json({ products, total });
-  } catch (err) {
-    next(err);
-  }
+  res.json({ products, total });
 };
 
 export const getAllCategoriesController = async (
@@ -84,11 +72,7 @@ export const getAllCategoriesController = async (
   res: Response<string[]>,
   next: NextFunction
 ) => {
-  try {
-    const categories = await getAllCategories();
+  const categories = await getAllCategories();
 
-    res.json(categories);
-  } catch (err) {
-    next(err);
-  }
+  res.json(categories);
 };

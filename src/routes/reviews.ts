@@ -12,26 +12,27 @@ import {
   addReviewForProductSchema,
   updateReviewForProductSchema,
 } from "../schemas/reviewValidator";
+import { tryCatch } from "../middlewares/tryCatchMiddleware";
 
 export function createReviewsRouter() {
   const router = express.Router();
 
-  router.get("/:productId", getAllReviewsForProductController);
+  router.get("/:productId", tryCatch(getAllReviewsForProductController));
 
   router.use(authMiddleware);
 
-  router.get("/", getAllUserReviewsController);
+  router.get("/", tryCatch(getAllUserReviewsController));
 
   router.post(
     "/:productId",
     validationMiddleware(addReviewForProductSchema),
-    addReviewForProductController
+    tryCatch(addReviewForProductController)
   );
   router.delete("/:productId", deleteReviewForProductController);
   router.put(
     "/:productId",
     validationMiddleware(updateReviewForProductSchema),
-    updateReviewForProductController
+    tryCatch(updateReviewForProductController)
   );
 
   return router;

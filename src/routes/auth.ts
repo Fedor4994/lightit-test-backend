@@ -7,6 +7,7 @@ import {
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { validationMiddleware } from "../middlewares/validationMiddleware";
 import { authSchema } from "../schemas/userValidator";
+import { tryCatch } from "../middlewares/tryCatchMiddleware";
 
 export function createAuthRouter() {
   const router = express.Router();
@@ -14,10 +15,14 @@ export function createAuthRouter() {
   router.post(
     "/register",
     validationMiddleware(authSchema),
-    registerController
+    tryCatch(registerController)
   );
-  router.post("/login", validationMiddleware(authSchema), loginController);
-  router.get("/current", authMiddleware, getCurrentUserController);
+  router.post(
+    "/login",
+    validationMiddleware(authSchema),
+    tryCatch(loginController)
+  );
+  router.get("/current", authMiddleware, tryCatch(getCurrentUserController));
 
   return router;
 }

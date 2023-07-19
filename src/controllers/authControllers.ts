@@ -10,22 +10,18 @@ export const registerController = async (
   res: Response<AuthUserResponse>,
   next: NextFunction
 ) => {
-  try {
-    const data = await register(req.body);
-    if (!data) {
-      throw RequestError(409, "Username in use");
-    }
-
-    res.status(201).json({
-      user: {
-        username: data.newUser.username,
-        _id: data.newUser._id,
-      },
-      token: data.token,
-    });
-  } catch (err) {
-    next(err);
+  const data = await register(req.body);
+  if (!data) {
+    throw RequestError(409, "Username in use");
   }
+
+  res.status(201).json({
+    user: {
+      username: data.newUser.username,
+      _id: data.newUser._id,
+    },
+    token: data.token,
+  });
 };
 
 export const loginController = async (
@@ -33,22 +29,18 @@ export const loginController = async (
   res: Response<AuthUserResponse>,
   next: NextFunction
 ) => {
-  try {
-    const data = await login(req.body);
-    if (!data) {
-      throw RequestError(401, "Email or password is wrong");
-    }
-
-    res.status(200).json({
-      user: {
-        username: data.newUser.username,
-        _id: data.newUser._id,
-      },
-      token: data.token,
-    });
-  } catch (err) {
-    next(err);
+  const data = await login(req.body);
+  if (!data) {
+    throw RequestError(401, "Email or password is wrong");
   }
+
+  res.status(200).json({
+    user: {
+      username: data.newUser.username,
+      _id: data.newUser._id,
+    },
+    token: data.token,
+  });
 };
 
 export const getCurrentUserController = async (
@@ -56,23 +48,19 @@ export const getCurrentUserController = async (
   res: Response<Omit<AuthUserResponse, "token">>,
   next: NextFunction
 ) => {
-  try {
-    if (!req.user) {
-      throw RequestError(401, "Not authorized");
-    }
-
-    const user = await getCurrentUser(req.user);
-    if (!user) {
-      throw RequestError(401, "Not authorized");
-    }
-
-    res.status(200).json({
-      user: {
-        username: user.username,
-        _id: user._id,
-      },
-    });
-  } catch (err) {
-    next(err);
+  if (!req.user) {
+    throw RequestError(401, "Not authorized");
   }
+
+  const user = await getCurrentUser(req.user);
+  if (!user) {
+    throw RequestError(401, "Not authorized");
+  }
+
+  res.status(200).json({
+    user: {
+      username: user.username,
+      _id: user._id,
+    },
+  });
 };
